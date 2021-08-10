@@ -1,0 +1,14 @@
+<link rel="stylesheet" type="text/css" href="/css/styleAlt.css">
+
+<div class="DivCategoria">
+    <h4 class="titulo">Categorias</h4>
+    {{#each categoria}}
+        <div class="card-cate">
+            <a class="categorias" href="/categoria/{{slug}}">
+                <h3 class="informacao">{{nome}}</h3>
+            </a>
+        </div>
+
+    {{else}}
+    {{/each}}
+</div>

@@ -1,0 +1,24 @@
+<link rel="stylesheet" type="text/css" href="/css/styleAlt.css">
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+{{/each}}
+
+<div class="cardRegistro">
+    <h3 class="titulo">Cria sua conta</h3>
+    <div id="divform2" class="card-body">
+        <form action="" method="POST">
+            <label for="text" name="nome">Nome</label>
+            <input type="text" name="nome" class="form-control">
+            <label for="email" name="email">Email</label>
+            <input type="email" name="email" class="form-control">
+            <label for="senha" name="senha">Senha</label>
+            <input type="password" name="senha" class="form-control">
+            <label for="senha2" name="senha2">Repita a Senha</label>
+            <input type="password" name="senha2" class="form-control">
+            <br>
+            <button type="submit" class="btn btn-success">Criar Usuario</button>
+        </form>
+        
+    </div>
+</div>

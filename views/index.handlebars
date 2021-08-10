@@ -1,0 +1,37 @@
+
+<link rel="stylesheet" type="text/css" href="/css/styleAlt.css">
+<div class="jumbotron">
+  <h1 class="titulo"><strong>Bem Vindo</strong></h1>
+  <p class="Sub-titulo">Densenvolvendo com nodejs.</p>
+  <hr class="my-4">
+  <div class="informacao">
+    <p class="p1">Aplicação tem o objetivo de mostrar funcionamento do backend.</p>
+    <p class="p2">Sistema utilizando: Js, nodejs, mongo, express, autenticação, handlebars e Bootstrap.</p>
+    <p class="p3">obs: o usuario criado, não poderá criar, editar ou deletar postagem.<br />Fica a cargo do
+      administrador.</p>
+    {{#if user}}
+    {{else}}
+    <a class="btn btn-primary btn-lg" href="/usuarios/registro" role="button">Crie uma conta</a>
+    {{/if}}
+  </div>
+</div>
+
+<h2>Postagens recentes:</h2>
+
+{{#each postagens}}
+<div class="card">
+  <div class="card-body">
+    <h3>{{titulo}}</h3>
+    <p>{{descricao}}</p>
+    <p>{{slug}}</p>
+    <hr>
+    <small>Categoria: {{categoria.nome}}</small><br>
+    <small>Data de criação: {{data}}</small><br>
+
+    <a href="/postagem/{{slug}}"><button type="submit" class="btn btn-success">Leia mais</button></a>
+
+  </div>
+</div>
+{{else}}
+<h5>Nenhuma postagem registrada</h5>
+{{/each}}
