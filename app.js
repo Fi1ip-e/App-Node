@@ -15,7 +15,9 @@ const usuarios = require('./routes/usuarios');
 const passport = require('passport');
 require('./config/auth')(passport);
 const db = require('./config/db');
+const moment = require('moment');
 
+//handlebars.registerHelper('dateFormat', require('handlebars-dateformat'))
 
 //CONFIGURAÇÕES:
 
@@ -33,9 +35,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 
-app.use((req, res, next) =>
-
-{//declaração de variavel global
+app.use((req, res, next) => {//declaração de variavel global
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
@@ -45,20 +45,28 @@ app.use((req, res, next) =>
 
 //mongoose
 mongoose.Promise = global.Promise;
-mongoose.connect(db.mongoURI, {useNewUrlParser: true, useUnifiedTopology: true }).then(() =>
-{
+mongoose.connect(db.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     console.log("conectado ao mongo")
-}).catch((err) =>
-{
+}).catch((err) => {
     console.log("Erro ao se conectar " + err)
 })
 
 //body-parser
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //handlebars
-app.engine('handlebars', handlebars({extname: 'handlebars', defaultLayout: 'main', layoutsDir: __dirname + "/views/layouts"}));
+app.engine('handlebars', handlebars({
+
+    extname: 'handlebars',
+    defaultLayout: 'main',
+    layoutsDir: __dirname + "/views/layouts",
+    helpers: {
+        formatDate: (date) => {
+            return moment(date).format('DD/MMM/YYYY')
+        }
+    }
+}));
 app.set('view engine', 'handlebars');
 //app.set('views', path.join(__dirname, 'views'));
 
@@ -68,71 +76,54 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //ROTA principal
 
-app.get('/', (req, res) =>
-{
-    Postagem.find().lean().populate('categoria').sort({data: 'desc'}).then((postagens) =>
-    {
-        res.render('index', {postagens: postagens})
-    }).catch((err) =>
-    {
+app.get('/', (req, res) => {
+    Postagem.find().lean().populate('categoria').sort({ data: 'desc' }).then((postagens) => {
+        res.render('index', { postagens: postagens })
+    }).catch((err) => {
         req.flash('error_msg', 'Houve um erro')
         res.redirect('/404')
-    })    
+    })
 })
 //rota de visualização de conteudo das postagem
-app.get('/postagem/:slug', (req, res) =>
-{
-    Postagem.findOne({slug: req.params.slug}).lean().then((postagem) =>
-    {
-        if (postagem)
-        {
-            res.render('postagem/vermais', {postagem: postagem})
-        }        
-        
-    }).catch((err) =>
-    {
+app.get('/postagem/:slug', (req, res) => {
+    Postagem.findOne({ slug: req.params.slug }).lean().then((postagem) => {
+        if (postagem) {
+            res.render('postagem/vermais', { postagem: postagem })
+        }
+
+    }).catch((err) => {
         req.flash("error_msg", "Houve um erro interno")
         res.redirect('/')
     })
 })
 
-app.get('/categorias', (req, res) =>
-{
-    Categoria.find().then((categoria) =>
-    {
-        res.render('categorias/cat', {categoria: categoria.map(category => category.toJSON())})
-    }).catch((err) =>
-    {
+app.get('/categorias', (req, res) => {
+    Categoria.find().then((categoria) => {
+        res.render('categorias/cat', { categoria: categoria.map(category => category.toJSON()) })
+    }).catch((err) => {
         req.flash("error_msg", "houve um erro ao carregar as categorias")
         res.redirect('/')
     })
 })
 
-app.get('/categoria/:slug', (req, res) =>
-{
-    Categoria.findOne({slug: req.params.slug}).then((categoria) =>
-    {
-        if (categoria)
-        {
-            Postagem.find({categoria: categoria._id}).lean().then((postagens) =>
-            {
-                res.render('categorias/post', {postagens: postagens, categoria: categoria})
-            }).catch((err) =>
-            {
+app.get('/categoria/:slug', (req, res) => {
+    Categoria.findOne({ slug: req.params.slug }).then((categoria) => {
+        if (categoria) {
+            Postagem.find({ categoria: categoria._id }).lean().then((postagens) => {
+                res.render('categorias/post', { postagens: postagens, categoria: categoria })
+            }).catch((err) => {
                 req.flash("error_msg", "Houve um erro ao listar oa post")
                 res.redirect('/')
             })
         }
-        else
-        {
+        else {
             req.flash("error_msg", "Essa categoria não existe")
             res.redirect('/')
         }
     })
 })
 
-app.get('/404', (req, res) =>
-{
+app.get('/404', (req, res) => {
     res.send("Erro 404!")
 })
 
@@ -144,4 +135,4 @@ const port = process.env.PORT || 8080;
 //const http = require('http');
 //const hostname = '127.0.0.1';
 
-app.listen(port || hostname, () => {console.log("Servidor rodando")});
+app.listen(port || hostname, () => { console.log("Servidor rodando") });

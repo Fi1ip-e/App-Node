@@ -8,6 +8,6 @@
 ## Dependencias utilizadas:
 Todas usando instaladas via npm.
 
-### express, body-parser, connect-flash, express-session, express-handlebars, handlebars, bcryptjs", mongoose, passport, passport-local".
+### express, connect-flash, express-session, express-handlebars, handlebars, bcryptjs", mongoose, passport, passport-local".
 
 #### obs: na aplicação construida ja com um tempo, hoje dia não usaria mais o bodyparser.
