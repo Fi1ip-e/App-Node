@@ -17,8 +17,6 @@ require('./config/auth')(passport);
 const db = require('./config/db');
 const moment = require('moment');
 
-//handlebars.registerHelper('dateFormat', require('handlebars-dateformat'))
-
 //CONFIGURAÇÕES:
 
 //Session
@@ -51,6 +49,7 @@ mongoose.connect(db.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
     console.log("Erro ao se conectar " + err)
 })
 
+
 //body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -64,6 +63,11 @@ app.engine('handlebars', handlebars({
     helpers: {
         formatDate: (date) => {
             return moment(date).format('DD/MMM/YYYY')
+        },
+        quebraLinha: (linha) => {
+            let valor = linha;
+            valor.replace('/\\n/g, <br />');
+            return document.getElementsByClassName(".texto").innerHTML = valor;
         }
     }
 }));

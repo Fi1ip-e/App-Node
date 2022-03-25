@@ -21,5 +21,6 @@
 </style>
 <div class="container">
     <h2 class="titulo">{{postagem.titulo}}</h2>
-    <p class="texto">{{postagem.conteudo}}</p>
+    <small>{{formatDate postagem.data}}</small>
+    <p class="texto">{{quebraLinha postagem.conteudo}}</p>
 </div>
